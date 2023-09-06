@@ -152,8 +152,11 @@ class NativeAssetsBuildRunnerImpl implements NativeAssetsBuildRunner {
     if (globals.platform.isLinux) {
       return cCompilerConfigLinux();
     }
+    if (globals.platform.isWindows) {
+      return cCompilerConfigWindows();
+    }
     throwToolExit(
-      'Native assets feature not yet implemented for Linux, Windows and Android.',
+      'Native assets feature not yet implemented for Android.',
     );
   }();
 }
@@ -294,9 +297,10 @@ Future<Uri?> dryRunNativeAssetsMultipeOSes({
           fileSystem, projectUri, false, buildRunner),
     if (targetPlatforms.contains(build_info.TargetPlatform.linux_arm64) ||
         targetPlatforms.contains(build_info.TargetPlatform.linux_x64) ||
+        targetPlatforms.contains(build_info.TargetPlatform.windows_x64) ||
         (targetPlatforms.contains(build_info.TargetPlatform.tester) &&
             OS.current == OS.linux))
-      ...await dryRunNativeAssetsLinuxInternal(
+      ...await dryRunNativeAssetsLinuxWindowsInternal(
           fileSystem, projectUri, false, buildRunner),
     if (targetPlatforms.contains(build_info.TargetPlatform.ios)) ...await dryRunNativeAssetsIOSInternal(fileSystem, projectUri, buildRunner)
   ];

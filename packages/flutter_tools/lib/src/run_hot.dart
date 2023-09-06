@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
+import 'package:native_assets_cli/native_assets_cli.dart';
 import 'package:package_config/package_config.dart';
 import 'package:pool/pool.dart';
 import 'package:vm_service/vm_service.dart' as vm_service;
@@ -493,11 +494,20 @@ class HotRunner extends ResidentRunner {
             buildRunner: _buildRunner!,
           );
         } else if (const LocalPlatform().isLinux) {
-          nativeAssetsYaml = await dryRunNativeAssetsLinux(
+          nativeAssetsYaml = await dryRunNativeAssetsLinuxWindows(
             projectUri: projectUri,
             flutterTester: true,
             fileSystem: fileSystem,
             buildRunner: _buildRunner!,
+            os: OS.linux,
+          );
+        } else if (const LocalPlatform().isWindows) {
+          nativeAssetsYaml = await dryRunNativeAssetsLinuxWindows(
+            projectUri: projectUri,
+            flutterTester: true,
+            fileSystem: fileSystem,
+            buildRunner: _buildRunner!,
+            os: OS.windows,
           );
         } else {
           await ensureNoNativeAssetsOrOsIsSupported(
@@ -510,10 +520,18 @@ class HotRunner extends ResidentRunner {
         }
       case TargetPlatform.linux_arm64:
       case TargetPlatform.linux_x64:
-        nativeAssetsYaml = await dryRunNativeAssetsLinux(
+        nativeAssetsYaml = await dryRunNativeAssetsLinuxWindows(
           projectUri: projectUri,
           fileSystem: fileSystem,
           buildRunner: _buildRunner!,
+          os: OS.linux,
+        );
+      case TargetPlatform.windows_x64:
+        nativeAssetsYaml = await dryRunNativeAssetsLinuxWindows(
+          projectUri: projectUri,
+          fileSystem: fileSystem,
+          buildRunner: _buildRunner!,
+          os: OS.windows,
         );
       case TargetPlatform.android_arm:
       case TargetPlatform.android_arm64:
@@ -523,7 +541,6 @@ class HotRunner extends ResidentRunner {
       case TargetPlatform.fuchsia_arm64:
       case TargetPlatform.fuchsia_x64:
       case TargetPlatform.web_javascript:
-      case TargetPlatform.windows_x64:
         await ensureNoNativeAssetsOrOsIsSupported(
           projectUri,
           targetPlatform.toString(),
