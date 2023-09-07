@@ -59,7 +59,7 @@ const String exampleAppName = '${packageName}_example';
 
 void main() {
   if (!platform.isMacOS && !platform.isLinux && !platform.isWindows) {
-    // TODO(dacoharkes): Implement other OSes. https://github.com/flutter/flutter/issues/129757
+    // TODO(dacoharkes): Implement Fuchsia. https://github.com/flutter/flutter/issues/129757
     return;
   }
 
@@ -152,7 +152,6 @@ void main() {
             expectDylibIsBundledWindows(exampleDirectory, buildMode);
           }
           if (device == hostOs && device != 'windows') {
-            // TODO(dacoharkes): Implement this for Windows. https://github.com/flutter/flutter/issues/129757
             expectCCompilerIsConfigured(exampleDirectory);
           }
         });
@@ -211,7 +210,10 @@ void main() {
             expectDylibIsBundledWindows(exampleDirectory, buildMode);
           }
           if (buildSubcommand != 'windows') {
-            // TODO(dacoharkes): Implement this for Windows. https://github.com/flutter/flutter/issues/129757
+            // Both package:native_toolchain_c and flutter_tools use vswhere so
+            // don't pass the information here. Passing the information
+            // would require copying the logic for finding cl.exe and
+            // vcvars to flutter_tools.
             expectCCompilerIsConfigured(exampleDirectory);
           }
         });

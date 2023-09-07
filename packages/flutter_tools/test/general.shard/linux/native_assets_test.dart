@@ -348,7 +348,6 @@ void main() {
     FileSystem: () => fileSystem,
   }, () async {
     if (!const LocalPlatform().isLinux) {
-      // TODO(dacoharkes): Implement other OSes. https://github.com/flutter/flutter/issues/129757
       return;
     }
 
